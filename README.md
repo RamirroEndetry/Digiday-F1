@@ -55,8 +55,7 @@ Cena se určuje podle výsledného času, nastavuje se v `index.html` v konstant
 | Ukončení Electron aplikace | Ctrl+Q |
 | Přepnutí kiosk / okno (Electron) | F11 |
 
-Heslo správce je v souboru `config.local.js` (vzor: `config.example.js`). Soubor se nenahrává
-na GitHub, ale při sestavení se přibalí do aplikace. Bez něj se správa neodemkne.
+Heslo správce je v souboru `config.local.js` (`adminPassword`).
 
 Žebříček se ukládá na daném zařízení, každé zařízení má vlastní. Výsledky zůstávají
 i po vypnutí, restartu nebo výpadku proudu – smazat je jde jen resetem s heslem.
