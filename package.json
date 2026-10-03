@@ -1,0 +1,53 @@
+{
+  "name": "test-reakce-f1",
+  "productName": "Test reakce F1",
+  "version": "1.4.0",
+  "description": "Test reakční doby – překonej pilota Formule 1",
+  "main": "main.js",
+  "author": "Martin <martin@tripon.cz>",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win"
+  },
+  "build": {
+    "appId": "cz.tripon.testreakce",
+    "productName": "Test reakce F1",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "config.local.js",
+      "package.json",
+      "build/icon.png",
+      "assets/**/*"
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        "portable",
+        "nsis"
+      ],
+      "artifactName": "TestReakceF1-${version}-${arch}.${ext}"
+    },
+    "portable": {
+      "artifactName": "TestReakceF1-portable.exe"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "artifactName": "TestReakceF1-instalace.exe"
+    }
+  },
+  "devDependencies": {
+    "electron": "^44.3.0",
+    "electron-builder": "^26.15.3",
+    "png-to-ico": "^3.0.2",
+    "sharp": "^0.35.4"
+  }
+}
