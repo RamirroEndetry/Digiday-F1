@@ -515,17 +515,42 @@
     }
   }
   
+  let playbackAttempt = 0;
+
   function playScene(i){
+    const attempt = ++playbackAttempt;
     showScene(i);
     clearTimeout(sceneTimer);
-    if(screens.attract.classList.contains('novideo')){ sceneTimer=setTimeout(nextScene,SCENE_MS); return; }
+    if(screens.attract.classList.contains('novideo')){
+      sceneTimer=setTimeout(nextScene,SCENE_MS);
+      return;
+    }
+
     const v=vids[frontVid], back=vids[1-frontVid];
-    v.classList.add('show'); back.classList.remove('show');
-    v.play().catch(()=>{});
-    back.src=CLIPS[(i+1)%CLIPS.length]; back.load();
-    sceneTimer=setTimeout(nextScene,SCENE_MS*2);
+    back.pause();
+    v.muted=true;
+    v.playsInline=true;
+    v.classList.add('show');
+    back.classList.remove('show');
+
+    v.play().then(()=>{
+      if(attempt!==playbackAttempt || current!=='attract') return;
+      // Odpočet začíná až po skutečném spuštění videa.
+      sceneTimer=setTimeout(nextScene,SCENE_MS*2);
+    }).catch(error=>{
+      if(attempt!==playbackAttempt || current!=='attract') return;
+      console.warn('Přehrávání videa selhalo:', {
+        src:v.currentSrc,
+        name:error.name,
+        message:error.message,
+        mediaError:v.error?.code
+      });
+    });
+
+    back.src=CLIPS[(i+1)%CLIPS.length];
+    back.load();
   }
-  
+
   function nextScene(){
     if(current!=='attract') return;
     frontVid=1-frontVid;
@@ -551,6 +576,7 @@
   }
   
   function stopAttract(){
+    ++playbackAttempt;
     clearTimeout(sceneTimer); lampTimers.forEach(clearTimeout);
     vids.forEach(v=>v.pause());
   }
