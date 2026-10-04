@@ -1,0 +1,7 @@
+// Příklad konfigurace. Zkopíruj jako config.local.js a vyplň svou hodnotu.
+// VAROVÁNÍ: config.local.js nikdy neukládej do repo – je v .gitignore.
+// Heslo správce se čte z environment proměnné DIGIDAY_ADMIN_PASSWORD,
+// nebo z tohoto souboru jako fallback pro lokální vývoj.
+window.APP_CONFIG = {
+  adminPassword: 'NAHRAĎ-TÍMTO-SVÉ-HESLO-LOKÁLNĚ',
+};
