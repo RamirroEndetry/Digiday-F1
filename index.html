@@ -527,17 +527,29 @@
     }
 
     const v=vids[frontVid], back=vids[1-frontVid];
-    back.pause();
+    // pojistka: když se klip nerozběhne nebo zasekne (pomalá síť, zakázaný autoplay), scéna stejně pokračuje
+    sceneTimer=setTimeout(nextScene,SCENE_MS*2);
+
     v.muted=true;
     v.playsInline=true;
-    v.classList.add('show');
-    back.classList.remove('show');
+    if(v.getAttribute('src')!==CLIPS[i]){ v.src=CLIPS[i]; v.load(); }
+    else if(v.currentTime>0) v.currentTime=0;
 
-    v.play().then(()=>{
+    // předchozí klip zůstává vidět, dokud nový opravdu neběží – žádné černé probliknutí při načítání
+    v.addEventListener('playing',()=>{
       if(attempt!==playbackAttempt || current!=='attract') return;
-      // Odpočet začíná až po skutečném spuštění videa.
-      sceneTimer=setTimeout(nextScene,SCENE_MS*2);
-    }).catch(error=>{
+      v.classList.add('show');
+      back.classList.remove('show');
+      back.pause();
+      // další klip se přednačte až po prolnutí, aby se nepral o linku s právě běžícím
+      setTimeout(()=>{
+        if(attempt!==playbackAttempt) return;
+        back.src=CLIPS[(i+1)%CLIPS.length];
+        back.load();
+      },600);
+    },{once:true});
+
+    v.play().catch(error=>{
       if(attempt!==playbackAttempt || current!=='attract') return;
       console.warn('Přehrávání videa selhalo:', {
         src:v.currentSrc,
@@ -546,9 +558,6 @@
         mediaError:v.error?.code
       });
     });
-
-    back.src=CLIPS[(i+1)%CLIPS.length];
-    back.load();
   }
 
   function nextScene(){
@@ -568,13 +577,14 @@
   
   function startAttract(){
     frontVid=0;
-    if(!screens.attract.classList.contains('novideo')){ 
-      vids[0].src=CLIPS[0]; 
-      vids[0].load();
-    }
     playScene(0);
   }
   
+  // prohlížeč video na pozadí (skrytá karta, zamčený telefon) sám pozastaví – po návratu ho hned rozjedeme znovu
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden && current==='attract' && vids[frontVid].paused) playScene(sceneIdx);
+  });
+
   function stopAttract(){
     ++playbackAttempt;
     clearTimeout(sceneTimer); lampTimers.forEach(clearTimeout);
