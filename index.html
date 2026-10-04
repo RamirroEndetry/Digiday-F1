@@ -952,6 +952,9 @@
   $('#attractPrizes').textContent='Hraj o ceny '+PRIZES.map(p=>p.icon).join(' ');
   $('#introPrizes').innerHTML='Hraješ o ceny: <b>'+esc(prizeText)+'</b>';
   $('#boardLegend').innerHTML='<b>🏁 Pilot F1</b> = Valtteri Bottas (201 ms)<br><b style="color:var(--gold)">1., 2., 3.</b> = místa na žebříčku';
+
+    // Spuštění úvodní obrazovky při načtení aplikace
+  show('attract');
 })();
 </script>
 </body>
