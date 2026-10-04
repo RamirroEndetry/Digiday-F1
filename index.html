@@ -535,9 +535,12 @@
     if(v.getAttribute('src')!==CLIPS[i]){ v.src=CLIPS[i]; v.load(); }
     else if(v.currentTime>0) v.currentTime=0;
 
-    // předchozí klip zůstává vidět, dokud nový opravdu neběží – žádné černé probliknutí při načítání
-    v.addEventListener('playing',()=>{
-      if(attempt!==playbackAttempt || current!=='attract') return;
+    // předchozí klip zůstává vidět, dokud nový nemá co ukázat – žádné černé probliknutí při načítání.
+    // Čeká se na první snímek, ne na rozběhnutí: když telefon autoplay zakáže (úsporný režim), střídají se aspoň záběry.
+    let revealed=false;
+    const reveal=()=>{
+      if(revealed || attempt!==playbackAttempt || current!=='attract') return;
+      revealed=true;
       v.classList.add('show');
       back.classList.remove('show');
       back.pause();
@@ -547,9 +550,16 @@
         back.src=CLIPS[(i+1)%CLIPS.length];
         back.load();
       },600);
-    },{once:true});
+    };
+    if(v.readyState>=2) reveal();
+    else{
+      v.addEventListener('loadeddata',reveal,{once:true});
+      v.addEventListener('playing',reveal,{once:true});
+      setTimeout(reveal,1500);
+    }
 
     v.play().catch(error=>{
+      if(error.name==='NotAllowedError') autoplayBlocked=true;
       if(attempt!==playbackAttempt || current!=='attract') return;
       console.warn('Přehrávání videa selhalo:', {
         src:v.currentSrc,
@@ -580,6 +590,21 @@
     playScene(0);
   }
   
+  // iPhone v úsporném režimu (a některé prohlížeče v aplikacích) nedovolí video spustit bez dotyku.
+  // První klepnutí kamkoliv proto obě videa „odemkne“ – od té chvíle už je spořič smí pouštět sám.
+  let autoplayBlocked=false, unlocked=false;
+  function unlockVideos(){
+    if(unlocked || !autoplayBlocked) return;
+    unlocked=true;
+    vids.forEach((v,k)=>{
+      if(!v.getAttribute('src')){ v.src=CLIPS[k%CLIPS.length]; v.load(); }
+      v.muted=true;
+      const keep = current==='attract' && k===frontVid;
+      v.play().then(()=>{ if(!keep || current!=='attract') v.pause(); }).catch(()=>{ unlocked=false; });
+    });
+  }
+  ['touchend','click'].forEach(ev=>document.addEventListener(ev,unlockVideos,{capture:true,passive:true}));
+
   // prohlížeč video na pozadí (skrytá karta, zamčený telefon) sám pozastaví – po návratu ho hned rozjedeme znovu
   document.addEventListener('visibilitychange',()=>{
     if(!document.hidden && current==='attract' && vids[frontVid].paused) playScene(sceneIdx);
