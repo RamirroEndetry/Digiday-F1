@@ -4,12 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Test reakce – překonej pilota Formule 1</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+IDxkZWZzPiA8c3R5bGU+LnN0MHtmaWxsOiNlYzA3OGR9PC9zdHlsZT4gPC9kZWZzPiA8Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjI1NiIgc3R5bGU9ImZpbGw6IzEyMGMyZSIvPiA8cGF0aCBkPSJNMjU2IDEwMGMtODYgMC0xNTYgNzAtMTU2IDE1NnM3MCAxNTYgMTU2IDE1NiAxNTYtNzAgMTU2LTE1Ni03MC0xNTYtMTU2LTE1NnptMCAyODhjLTcyIDAtMTMyLTYwLTEzMi0xMzJzNjAtMTMyIDEzMi0xMzIgMTMyIDYwIDEzMiAxMzItNjAgMTMyLTEzMiAxMzJ6IiBjbGFzcz0ic3QwIi8+IDxwYXRoIGQ9Ik0yNTYgMTQ4Yy01OyAwLTEwNCA0Ny0xMDQgMTA0czQ3IDEwNCAxMDQgMTA0IDEwNC00NyAxMDQtMTA0LTQ3LTEwNC0xMDQtMTA0em0wIDE3NmMtNDAgMC03Mi0zMi03Mi03MnMzMi03MiA3Mi03MiA3MiAzMiA3MiA3Mi0zMiA3Mi03MiA3MnoiIGNsYXNzPSJzdDAiLz4gPC9zdmc+">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+IDxkZWZzPiA8c3R5bGU+LnN0MHtmaWxsOiNlYzA3OGR9PC9zdHlsZT4gPC9kZWZzPiA8Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjI1NiIgc3R5bGU9ImZpbGw6IzEyMGMyZSIvPiA8cGF0aCBkPSJNMjU2IDEwMGMtODYgMC0xNTYgNzAtMTU2IDE1NnM3MCAxNTYgMTU2IDE1NiAxNTYtNzAgMTU2LTE1Ni03MC0xNTYtMTU2LTE1NnptMCAyODhjLTcyIDAtMTMyLTYwLTEzMi0xMzJzNjAtMTMyIDEzMi0xMzIgMTMyIDYwIDEzMiAxMzItNjAgMTMyLTEzMiAxMzJ6IiBjbGFzcz0ic3QwIi8+IDxwYXRoIGQ9Ik0yNTYgMTQ4Yy01NyAwLTEwNCA0Ny0xMDQgMTA0czQ3IDEwNCAxMDQgMTA0IDEwNC00NyAxMDQtMTA0LTQ3LTEwNC0xMDQtMTA0em0wIDE3NmMtNDAgMC03Mi0zMi03Mi03MnMzMi03MiA3Mi03MiA3MiAzMiA3MiA3Mi0zMiA3Mi03MiA3MnoiIGNsYXNzPSJzdDAiLz4gPC9zdmc+">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    /* barvy loga DigiDay: tmavě modrofialová + magenta */
     --navy-900:#120c2e;
     --navy-700:#251b51;
     --navy-500:#3b2d80;
@@ -21,7 +20,7 @@
     --gold:#ffcc33;
     --font-display:"Barlow Condensed","Arial Narrow",Impact,sans-serif;
     --font-body:"Barlow","Segoe UI",Arial,sans-serif;
-    --kb-h:0px;   /* výška klávesnice na obrazovce, nastavuje se z JS */
+    --kb-h:0px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%;overflow:hidden;background:var(--navy-900);color:var(--white);font-family:var(--font-body);
@@ -29,11 +28,9 @@
   button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
   [hidden]{display:none!important}
 
-  /* ---------- screens ---------- */
   .screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4vh 6vw}
   .screen.active{display:flex}
 
-  /* ---------- background art ---------- */
   .bg{position:fixed;inset:0;overflow:hidden;z-index:0;
     background:radial-gradient(120% 90% at 50% 110%, #6a1668 0%, #2c1f66 40%, #120c2e 100%)}
   .bg .grid{position:absolute;inset:-10%;
@@ -53,7 +50,6 @@
   .bg .checker.top{top:0}.bg .checker.bottom{bottom:0}
   .screen .content{position:relative;z-index:1;max-width:1100px;width:100%}
 
-  /* ---------- typography ---------- */
   h1{font-family:var(--font-display);font-weight:900;text-transform:uppercase;line-height:.95;letter-spacing:.01em;
     font-size:clamp(44px,9vw,132px);text-shadow:0 10px 40px rgba(0,0,0,.45)}
   h1 .sub{display:block;font-size:.5em;font-weight:800;color:var(--pink);letter-spacing:.06em;margin-top:.15em}
@@ -63,7 +59,6 @@
   .kicker.small{font-weight:700;font-size:clamp(14px,2vw,26px);opacity:.9;margin-top:.6em}
   .kicker.pink{color:var(--pink)}
 
-  /* ---------- F1 start lights ---------- */
   .lights{display:flex;gap:clamp(8px,1.6vw,20px);justify-content:center;margin:0 auto 4vh;
     padding:clamp(10px,1.6vw,18px) clamp(14px,2.4vw,28px);background:#0b0a1a;border-radius:18px;
     box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 0 0 2px #2a2350;width:max-content}
@@ -72,8 +67,6 @@
     box-shadow:inset 0 0 8px rgba(0,0,0,.8);transition:background .08s,box-shadow .08s}
   .lights .lamp.on{background:var(--red);box-shadow:0 0 18px 4px rgba(225,6,0,.75),inset 0 0 8px rgba(255,255,255,.35)}
 
-  /* ---------- attract screen: video spořič ---------- */
-  /* pod texty běží smyčka záběrů z assets/video; když videa chybí, zůstane vidět běžné pozadí */
   #attract{padding:0;justify-content:space-between;cursor:pointer}
   .av{position:absolute;inset:0;z-index:0;background:#000}
   .av video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s}
@@ -105,7 +98,6 @@
     box-shadow:0 0 0 0 rgba(255,255,255,.8);animation:ring 1.4s ease-out infinite}
   @keyframes ring{to{box-shadow:0 0 0 18px rgba(255,255,255,0)}}
 
-  /* ---------- buttons ---------- */
   .btn{display:inline-block;margin-top:5vh;padding:clamp(16px,2vw,24px) clamp(40px,6vw,80px);border-radius:999px;
     font-family:var(--font-display);font-weight:800;text-transform:uppercase;letter-spacing:.1em;font-size:clamp(22px,3vw,38px);
     background:linear-gradient(180deg,#ff3fa9,var(--magenta));color:#fff;box-shadow:0 12px 30px rgba(238,10,140,.45),inset 0 1px 0 rgba(255,255,255,.4);
@@ -116,7 +108,6 @@
   .btn.secondary{background:rgba(255,255,255,.12);box-shadow:none;border:2px solid rgba(255,255,255,.4)}
   .btn.red{background:linear-gradient(180deg,#ff3b35,#b50500);box-shadow:0 12px 30px rgba(225,6,0,.45)}
 
-  /* ---------- instructions ---------- */
   .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,2vw,28px);margin:4vh auto 0;max-width:1000px}
   .step{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:clamp(16px,2.4vw,30px);backdrop-filter:blur(6px)}
   .step .n{font-family:var(--font-display);font-weight:900;font-size:clamp(40px,6vw,80px);line-height:1;color:var(--pink)}
@@ -126,8 +117,6 @@
   .prize-line b{color:var(--gold)}
   @media (max-width:700px){.steps{grid-template-columns:1fr}}
 
-  /* ---------- test screen ---------- */
-  /* červená a zelená zůstávají – jsou to signály startovního semaforu */
   #test{background:var(--navy-700);transition:background .05s;z-index:5}
   #test.wait{background:var(--red)}
   #test.go{background:var(--green)}
@@ -138,7 +127,6 @@
     letter-spacing:.2em;font-size:clamp(16px,2.2vw,28px);opacity:.85}
   #test .hint{font-size:clamp(18px,2.4vw,32px);margin-top:3vh;font-weight:500;opacity:.9}
   #test .hint.warn{color:var(--gold);font-weight:600;opacity:1;margin-top:1.5vh}
-  /* tlačítka testu (Pokračovat, Zkusit znovu…) jsou u spodního okraje, mimo střed, kam se kliká při měření */
   #test .test-actions{position:absolute;left:0;right:0;bottom:6vh;z-index:2}
   #test .test-actions .btn{margin-top:0}
   #test:has(.test-actions .btn){padding-bottom:calc(6vh + 100px)}
@@ -150,7 +138,6 @@
   .dots span.done{background:#fff}
   .dots span.now{background:var(--pink);box-shadow:0 0 0 4px rgba(238,10,140,.35)}
 
-  /* ---------- výherní stránka ---------- */
   #results{padding-top:3vh;padding-bottom:3vh}
   #results h2{font-size:clamp(30px,min(6vw,8vh),84px);line-height:1}
   .result-card{margin-top:2vh;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:26px;padding:clamp(14px,min(3vw,3vh),36px);backdrop-filter:blur(8px)}
@@ -180,7 +167,6 @@
   @keyframes fall{to{transform:translateY(115vh) rotate(720deg)}}
   @media (max-width:700px){.result-grid{grid-template-columns:1fr;gap:12px}.result-grid .vs{display:none}}
 
-  /* ---------- zápis do žebříčku (formulář nad klávesnicí) ---------- */
   #signup{justify-content:flex-start;overflow-y:auto;padding-top:calc(40px + 1.5vh);padding-bottom:calc(var(--kb-h) + 2vh)}
   #signup h2{font-size:clamp(26px,min(4.4vw,6vh),56px)}
   .sign-head{font-family:var(--font-display);font-weight:800;text-transform:uppercase;letter-spacing:.1em;font-size:clamp(16px,2vw,26px);color:var(--pink)}
@@ -197,7 +183,6 @@
   #signup .actions{margin-top:1.5vh}
   @media (max-width:700px){.form{grid-template-columns:1fr}}
 
-  /* ---------- klávesnice na obrazovce ---------- */
   .kb{position:fixed;left:0;right:0;bottom:0;z-index:60;padding:10px max(10px,calc((100vw - 1200px)/2)) 12px;
     background:linear-gradient(180deg,rgba(35,26,80,.96),rgba(18,12,46,.98));border-top:2px solid var(--magenta);
     box-shadow:0 -20px 60px rgba(0,0,0,.55);backdrop-filter:blur(10px);animation:kbin .22s ease-out}
@@ -219,7 +204,6 @@
   .kb.shift .key.ch{text-transform:uppercase}
   .kb.shift .key[data-k="shift"]{background:var(--magenta)}
 
-  /* ---------- žebříček: panel vysouvaný z boku ---------- */
   .board-btn{position:fixed;left:14px;bottom:14px;z-index:20;padding:.5em 1em;border-radius:14px;
     font-family:var(--font-display);font-weight:800;text-transform:uppercase;letter-spacing:.1em;font-size:clamp(15px,1.8vw,24px);
     background:rgba(18,12,46,.7);border:2px solid rgba(255,255,255,.35);backdrop-filter:blur(6px)}
@@ -247,7 +231,6 @@
   .board-win li.pilot-row .time{color:#fff}
   .drawer .btn{margin-top:2vh;align-self:center;font-size:clamp(18px,2.2vw,28px);padding:.5em 1.8em}
 
-  /* ---------- utilities ---------- */
   .fs-btn{position:fixed;right:14px;bottom:14px;z-index:20;width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.1);
     border:1px solid rgba(255,255,255,.25);font-size:22px;opacity:.5;transition:opacity .2s}
   .fs-btn:hover{opacity:1}
@@ -255,7 +238,6 @@
   .adm-btn:hover{opacity:.6}
   body.kb-open .fs-btn:not(.adm-btn),body.kb-open .board-btn{display:none}
 
-  /* ---------- správa (heslo): kontakty, poznámky, export, reset ---------- */
   .modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(18,12,46,.88);backdrop-filter:blur(6px);
     padding:3vh 4vw calc(3vh + var(--kb-h))}
   .modal-box{background:#1d1545;border:1px solid rgba(255,255,255,.25);border-radius:22px;padding:clamp(18px,2.6vw,32px);max-width:520px;width:100%;max-height:100%;
@@ -296,7 +278,6 @@
   <div class="checker bottom"></div>
 </div>
 
-<!-- ============ 1) SPOŘIČ / ÚVOD ============ -->
 <section class="screen active" id="attract">
   <div class="av" id="attractVideo">
     <video muted playsinline preload="auto"></video>
@@ -336,7 +317,6 @@
   </div>
 </section>
 
-<!-- ============ 2) INSTRUKCE ============ -->
 <section class="screen" id="intro">
   <div class="content fade-in">
     <h2>Jak to funguje</h2>
@@ -352,14 +332,12 @@
   </div>
 </section>
 
-<!-- ============ 3) TEST ============ -->
 <section class="screen" id="test">
   <div class="round" id="roundLabel"></div>
   <div class="content" id="testContent"></div>
   <div class="test-actions" id="testActions"></div>
 </section>
 
-<!-- ============ 4) VÝHERNÍ STRÁNKA ============ -->
 <section class="screen" id="results">
   <div class="confetti" id="confetti"></div>
   <div class="content fade-in">
@@ -399,7 +377,6 @@
   </div>
 </section>
 
-<!-- ============ 5) ZÁPIS DO ŽEBŘÍČKU + KONTAKT ============ -->
 <section class="screen" id="signup">
   <div class="content">
     <div class="sign-head" id="signHead"></div>
@@ -425,7 +402,6 @@
 <button class="fs-btn" id="fsBtn" title="Celá obrazovka">⛶</button>
 <button class="fs-btn adm-btn" id="admBtn" title="Správa">⚙</button>
 
-<!-- ============ ŽEBŘÍČEK (panel z boku) ============ -->
 <div class="drawer-wrap" id="boardWrap" hidden>
   <aside class="drawer">
     <h3>🏆 Žebříček</h3>
@@ -435,7 +411,6 @@
   </aside>
 </div>
 
-<!-- ============ SPRÁVA (heslo): kontakty, poznámky, export, reset ============ -->
 <div class="modal" id="admModal" hidden>
   <div class="modal-box" id="admLock">
     <h3>Správa</h3>
@@ -459,57 +434,38 @@
   </div>
 </div>
 
-<!-- ============ KLÁVESNICE NA OBRAZOVCE ============ -->
 <div class="kb" id="kb" hidden></div>
 
 <script src="config.local.js"></script>
 <script>
 (() => {
-  // ---------- konfigurace hesla správce ----------
-  let RESET_PASSWORD = '';
-
-  async function getResetPassword() {
-    try {
-      if (window.appConfig && typeof window.appConfig.getConfig === 'function') {
-        const config = await window.appConfig.getConfig();
-        if (config && config.adminPassword) return config.adminPassword;
-      }
-    } catch (e) {
-      // fallback níže
-    }
-    return (window.APP_CONFIG && window.APP_CONFIG.adminPassword) || '';
-  }
-
-  async function refreshResetPassword() {
-    RESET_PASSWORD = await getResetPassword();
-  }
-
-  refreshResetPassword();
+  // ---------- konfigurace hesla správce – jen z config.local.js ----------
+  const RESET_PASSWORD = (window.APP_CONFIG && window.APP_CONFIG.adminPassword) || '';
 
   // ---------- další konfigurace ----------
-  const PILOT_MS = 201;            // Valtteri Bottas, VC Rakouska 2017 – nejrychlejší regulérní start v F1
+  const PILOT_MS = 201;
   const ROUNDS = 3;
-  const GAMES = ['Trénink','Naostro'];   // každý hráč jede dvě jízdy, počítá se rychlejší průměr
-  // ceny podle výsledného času: první řádek, do kterého se čas vejde (při změně stačí upravit tady)
+  const GAMES = ['Trénink','Naostro'];
   const PRIZES = [
     {max:250,      name:'Srdíčko',   icon:'❤️'},
     {max:320,      name:'Peněženka', icon:'👛'},
     {max:Infinity, name:'Bonbón',    icon:'🍬'},
   ];
-  const MIN_DELAY = 1500, MAX_DELAY = 4500;   // náhodné čekání na červené (ms)
-  const MAX_EARLY = 2;             // povolené předčasné starty za jednu jízdu, další jízdu ukončí (při změně uprav i text v instrukcích)
-  const MIN_REACTION_MS = 100;     // rychleji člověk reagovat neumí = tipnutý klik, počítá se jako předčasný start
-  const BTN_LOCK_MS = 700;         // tlačítka (Rozumím, Pokračovat…) jsou po zobrazení chvíli neaktivní, aby je neodklikl rozjetý prst
-  const IDLE_MS = 60000;           // po 60 s nečinnosti návrat na spořič
+  const MIN_DELAY = 1500, MAX_DELAY = 4500;
+  const MAX_EARLY = 2;
+  const MIN_REACTION_MS = 100;
+  const BTN_LOCK_MS = 700;
+  const IDLE_MS = 60000;
   const BOARD_KEY = 'f1-reaction-board-v1';
-  const BOARD_SIZE = 50;           // kolik nejlepších ukazuje panel žebříčku
-  const BOARD_CLOSE_MS = 30000;    // panel žebříčku se po 30 s bez dotyku sám zavře
+  const BOARD_SIZE = 50;
+  const BOARD_CLOSE_MS = 30000;
 
   // ---------- pomocné ----------
   const $ = s => document.querySelector(s);
   const screens = ['attract','intro','test','results','signup'].reduce((o,id)=>(o[id]=document.getElementById(id),o),{});
   const bg = $('#bg'), boardBtn = $('#boardBtn');
   let current = 'attract', modalOpen = false;
+  
   function show(id){
     Object.values(screens).forEach(s=>s.classList.remove('active'));
     screens[id].classList.add('active');
@@ -520,9 +476,9 @@
     if(id==='signup') kbShow($('#nameInput')); else if(!modalOpen) kbHide();
     resetIdle();
   }
+  
   function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   const prizeFor = ms => PRIZES.find(p=>ms<=p.max);
-  // po zobrazení tlačítko chvíli zamkne, aby ho neodklikl rozjetý prst
   function lockBriefly(btn){ btn.disabled=true; setTimeout(()=>{ btn.disabled=false; },BTN_LOCK_MS); }
 
   // ---------- pozadí: světelné čáry ----------
@@ -536,20 +492,20 @@
   }
 
   // ---------- spořič: smyčka videí s texty ----------
-  // každý klip má svou scénu s textem; dvě <video> se střídají, aby byl další klip přednačtený a střih plynulý
   const CLIPS=[1,2,3,4,5].map(n=>`assets/video/f1-${n}.mp4`);
-  const SCENE_MS = 5000;           // délka scény, když se video nepodaří načíst
+  const SCENE_MS = 5000;
   const vids=[...document.querySelectorAll('#attractVideo video')];
   const scenes=[...document.querySelectorAll('#attract .scene')];
   const lamps=[...document.querySelectorAll('#attractLights .col')];
   let sceneIdx=0, frontVid=0, sceneTimer=null, lampTimers=[];
 
   function setLamps(n){ lamps.forEach((c,i)=>c.querySelectorAll('.lamp').forEach(l=>l.classList.toggle('on',i<n))); }
+  
   function showScene(i){
     sceneIdx=i;
     scenes.forEach((s,k)=>s.classList.toggle('on',k===i));
     lampTimers.forEach(clearTimeout); lampTimers=[]; setLamps(0);
-    if(i===0){   // startovní semafor: světla naskakují po jednom a před střihem zhasnou
+    if(i===0){
       for(let n=1;n<=5;n++) lampTimers.push(setTimeout(()=>setLamps(n),300+n*650));
       lampTimers.push(setTimeout(()=>setLamps(0),4600));
     }
@@ -558,6 +514,7 @@
       $('#attractRecord').textContent = best ? `Rekord: ${best.ms} ms – ${best.name}` : 'Zatím nikdo. Buď první!';
     }
   }
+  
   function playScene(i){
     showScene(i);
     clearTimeout(sceneTimer);
@@ -566,13 +523,15 @@
     v.classList.add('show'); back.classList.remove('show');
     v.play().catch(()=>{});
     back.src=CLIPS[(i+1)%CLIPS.length]; back.load();
-    sceneTimer=setTimeout(nextScene,SCENE_MS*2);   // pojistka, kdyby video nedalo vědět, že skončilo
+    sceneTimer=setTimeout(nextScene,SCENE_MS*2);
   }
+  
   function nextScene(){
     if(current!=='attract') return;
     frontVid=1-frontVid;
     playScene((sceneIdx+1)%CLIPS.length);
   }
+  
   vids.forEach((v,k)=>{
     v.addEventListener('ended',()=>{ if(k===frontVid) nextScene(); });
     v.addEventListener('error',()=>{
@@ -581,11 +540,16 @@
       if(current==='attract') playScene(sceneIdx);
     });
   });
+  
   function startAttract(){
     frontVid=0;
-    if(!screens.attract.classList.contains('novideo')){ vids[0].src=CLIPS[0]; vids[0].load(); }
+    if(!screens.attract.classList.contains('novideo')){ 
+      vids[0].src=CLIPS[0]; 
+      vids[0].load();
+    }
     playScene(0);
   }
+  
   function stopAttract(){
     clearTimeout(sceneTimer); lampTimers.forEach(clearTimeout);
     vids.forEach(v=>v.pause());
@@ -607,8 +571,6 @@
   }
 
   // ---------- spořič -> instrukce ----------
-  // tlačítko Rozumím je po zobrazení návodu chvíli zamčené (stejně jako Pokračovat mezi koly),
-  // aby se návod nepřeskočil rozjetým dotykem z úvodní obrazovky
   const startBtn=$('#startBtn');
   function goIntro(){
     show('intro');
@@ -622,7 +584,7 @@
 
   // ---------- test: dvě jízdy (trénink + naostro), každá po ROUNDS kolech ----------
   const testEl=screens.test, testContent=$('#testContent'), testActions=$('#testActions'), roundLabel=$('#roundLabel');
-  let gameIdx=0, gameAvgs=[null,null];   // průměr každé jízdy; null = jízda nedokončena
+  let gameIdx=0, gameAvgs=[null,null];
   let times=[], earlyCount=0, armed=false, waiting=false, goAt=0, waitTimer=null, rafId=null, lockTimer=null;
   const avgOf = arr => Math.round(arr.reduce((a,b)=>a+b,0)/arr.length);
 
@@ -631,7 +593,6 @@
       `<span class="${i<times.length?'done':(i===times.length?'now':'')}"></span>`).join('')+'</div>';
   }
 
-  // tlačítko u spodního okraje; odemkne se až po chvíli, aby ho neodklikly rychlé kliky za sebou
   function showAction(label,cls,onClick){
     testActions.innerHTML=`<button class="btn ${cls}" disabled>${label}</button>`;
     const btn=testActions.firstChild;
@@ -658,8 +619,6 @@
     waiting=false;
     testEl.className='screen active go';
     testContent.innerHTML=`<div class="big">Klepni!</div>${dotsHTML()}`;
-    // měření běží okamžitě; po skutečném vykreslení zelené se start zpřesní,
-    // aby se nezapočítávalo zpoždění displeje
     goAt=performance.now(); armed=true;
     rafId=requestAnimationFrame(()=>{ rafId=requestAnimationFrame(()=>{ if(armed) goAt=Math.max(goAt,performance.now()); }); });
   }
@@ -684,7 +643,6 @@
     }
   }
 
-  // předčasný start: kolo se opakuje, ale jen MAX_EARLY× za jízdu – pak jízda končí bez výsledku
   function falseStart(why){
     earlyCount++;
     testEl.className='screen active early';
@@ -721,7 +679,6 @@
   function showRoundResult(t){
     const last=times.length>=ROUNDS;
     if(last) gameAvgs[gameIdx]=avgOf(times);
-    // třetí klepnutí jízdy naostro vede rovnou na výherní stránku
     if(last&&gameIdx===1){ showResults(); return; }
     testEl.className='screen active';
     const comment = t<=PILOT_MS ? '🔥 Rychleji než pilot F1!' : (t<250 ? 'Skvělé! Skoro jako pilot.' : (t<320 ? 'Dobrá reakce.' : 'Zkus se víc soustředit.'));
@@ -755,7 +712,6 @@
     $('#signed').hidden=true; toSignBtn.hidden=false; againBtn.textContent='Konec';
     ['#nameInput','#emailInput','#noteInput'].forEach(s=>{ $(s).value=''; });
     $('#signErr').hidden=true;
-    // konfety v barvách loga
     const colors=['#ee0a8c','#ff4fb0','#ffffff','#ffcc33','#3b2d80'];
     confetti.innerHTML=Array.from({length:44},(_,i)=>
       `<i style="left:${Math.random()*100}%;background:${colors[i%colors.length]};animation-duration:${3+Math.random()*3}s;animation-delay:${-Math.random()*6}s;transform:rotate(${Math.random()*360}deg)"></i>`).join('');
@@ -768,34 +724,18 @@
   });
   againBtn.addEventListener('click',goAttract);
 
-  // ---------- žebříček: úložiště ----------
-  // v Electronu soubor na disku (zapisuje se okamžitě, přežije výpadek proudu),
-  // v prohlížeči localStorage; záložně paměť. Smazat jde jen ve správě s heslem.
-  // záznam: {id, name, ms, date, email, note, training, sharp, prize}
-  const fileStore = window.boardStore || null;
+  // ---------- žebříček: localStorage ----------
   let memBoard=[];
   function loadBoard(){
-    if(fileStore){
-      try{
-        const b=fileStore.load();
-        if(Array.isArray(b)){ memBoard=b; return memBoard.slice(); }
-        // první spuštění s novou verzí: převezmi výsledky uložené dříve v localStorage
-        const old=JSON.parse(localStorage.getItem(BOARD_KEY));
-        if(Array.isArray(old)){ memBoard=old; fileStore.save(old); }
-      }catch(e){}
-      return memBoard.slice();
-    }
     try{ const b=JSON.parse(localStorage.getItem(BOARD_KEY)); if(Array.isArray(b)) memBoard=b; }catch(e){}
     return memBoard.slice();
   }
   function saveBoard(b){
     memBoard=b.slice();
-    if(fileStore){ try{ fileStore.save(b); }catch(e){} }
     try{ localStorage.setItem(BOARD_KEY,JSON.stringify(b)); }catch(e){}
   }
 
   // ---------- žebříček: panel z boku ----------
-  // otevírá se tlačítkem 🏆 vlevo dole (na spořiči, v návodu i na výherní stránce)
   const boardWrap=$('#boardWrap'), boardWin=$('#boardWin');
   let boardOpen=false, boardTimer=null;
   function renderBoard(){
@@ -845,14 +785,12 @@
   }
   $('#signBtn').addEventListener('click',sign);
   $('#signBack').addEventListener('click',()=>show('results'));
-  // Enter (i tlačítko na klávesnici na obrazovce) přeskakuje mezi poli, v posledním ukládá
   [[nameInput,()=>emailInput.focus()],[emailInput,()=>noteInput.focus()],[noteInput,sign]].forEach(([el,next])=>{
     el.addEventListener('keydown',e=>{ e.stopPropagation(); if(e.key==='Enter') next(); });
     el.addEventListener('input',()=>{ signErr.hidden=true; });
   });
 
   // ---------- klávesnice na obrazovce ----------
-  // na obrazovce zápisu je vidět stále, jinde vyjede při klepnutí do textového pole (heslo, poznámky ve správě)
   const kb=$('#kb');
   const KB_ROWS=[
     {keys:[...'1234567890']},
@@ -871,7 +809,6 @@
   let kbTarget=null, kbShift=false, kbRepeat=null;
 
   function kbSetShift(on){ kbShift=on; kb.classList.toggle('shift',on); }
-  // automatické velké písmeno: u jména na začátku každého slova, u poznámky na začátku
   function kbAutoShift(){
     const cap=kbTarget.dataset.cap, v=kbTarget.value;
     kbSetShift(cap==='words' ? /(^|\s)$/.test(v) : cap==='sentence' ? v==='' : false);
@@ -912,11 +849,11 @@
   }
   function kbStopRepeat(){ clearTimeout(kbRepeat); clearInterval(kbRepeat); }
   kb.addEventListener('pointerdown',e=>{
-    e.preventDefault();   // pole nesmí ztratit fokus
+    e.preventDefault();
     const key=e.target.closest('.key'); if(!key) return;
     kbPress(key.dataset.k);
     kbStopRepeat();
-    if(key.dataset.k==='back') kbRepeat=setTimeout(()=>{ kbRepeat=setInterval(()=>kbPress('back'),70); },450);   // podržení maže dál
+    if(key.dataset.k==='back') kbRepeat=setTimeout(()=>{ kbRepeat=setInterval(()=>kbPress('back'),70); },450);
   });
   ['pointerup','pointercancel','pointerleave'].forEach(ev=>kb.addEventListener(ev,kbStopRepeat));
   document.addEventListener('focusin',e=>{ if(e.target.matches('input.field')) kbShow(e.target); });
@@ -927,7 +864,6 @@
   },150));
 
   // ---------- správa (heslo): kontakty, poznámky, export, reset ----------
-  // otevře se nenápadným tlačítkem ⚙ vpravo nahoře nebo zkratkou Ctrl+Shift+Delete
   const admModal=$('#admModal'), admLock=$('#admLock'), admPanel=$('#admPanel'), admPass=$('#admPass'), admErr=$('#admErr'),
         admList=$('#admList'), admWipe=$('#admWipe');
   let wipeArmed=null, noteTimer=null;
@@ -941,13 +877,11 @@
   function closeAdmin(){
     admModal.hidden=true; modalOpen=false; admPass.value='';
     if(current==='signup') kbShow(nameInput); else kbHide();
-    if(current==='test') goAttract();   // rozjetá jízda se otevřením správy přerušila
+    if(current==='test') goAttract();
   }
-  async function unlockAdmin(){
-    const currentPassword = await getResetPassword();
-
-    if(!currentPassword || admPass.value !== currentPassword){
-      admErr.textContent = currentPassword ? 'Nesprávné heslo.' : 'Heslo správce není nastavené – chybí soubor config.local.js.';
+  function unlockAdmin(){
+    if(!RESET_PASSWORD||admPass.value!==RESET_PASSWORD){
+      admErr.textContent = RESET_PASSWORD ? 'Nesprávné heslo.' : 'Heslo správce není nastavené – chybí soubor config.local.js.';
       admErr.hidden=false; admPass.select(); return;
     }
     admLock.hidden=true; admPanel.hidden=false; kbHide();
@@ -964,13 +898,12 @@
   }
   admList.addEventListener('input',e=>{
     const id=e.target.dataset.id; if(!id) return;
-    if(noteTimer){ clearTimeout(noteTimer); noteTimer=null; saveBoard(memBoard); }   // nejdřív dopiš rozepsanou poznámku
+    if(noteTimer){ clearTimeout(noteTimer); noteTimer=null; saveBoard(memBoard); }
     const b=loadBoard(), en=b.find(x=>String(x.id)===id);
     if(!en) return;
     en.note=e.target.value;
     memBoard=b; noteTimer=setTimeout(()=>{ noteTimer=null; saveBoard(memBoard); },400);
   });
-  // export pro Excel: středník, UTF-8 s BOM
   $('#admExport').addEventListener('click',()=>{
     const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
     const rows=[['Pořadí','Jméno','E-mail','Čas (ms)','Trénink (ms)','Naostro (ms)','Cena','Poznámka','Datum']];
@@ -980,7 +913,6 @@
     a.href=URL.createObjectURL(blob); a.download=`digiday-f1-kontakty-${new Date().toISOString().slice(0,10)}.csv`;
     a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),5000);
   });
-  // smazání je nevratné, proto se potvrzuje druhým klepnutím
   admWipe.addEventListener('click',()=>{
     if(!wipeArmed){
       admWipe.textContent='Opravdu smazat? Klepni znovu';
