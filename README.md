@@ -78,6 +78,21 @@ Na úvodní obrazovce běží smyčka pěti záběrů `assets/video/f1-1.mp4` a�
 scénu (`.scene` v `index.html`, ve stejném pořadí jako klipy). Záběr vyměníte přepsáním
 souboru se stejným názvem. Když videa chybí, spořič běží s texty na běžném pozadí.
 
+Klipy jsou ve dvou sadách:
+
+- `assets/video/` – původní kvalita (17–21 Mbit/s, ~12 MB na klip). Používá ji Electron
+  aplikace, která čte z disku.
+- `assets/video/web/` – stejné rozlišení, datový tok ~4 Mbit/s (~3 MB na klip). Používá ji
+  web (GitHub Pages, telefony, tablety). Web si při startu všech pět klipů stáhne do paměti
+  a smyčku spustí až potom – do té doby běží scény bez videa, zato se pak na slabé síti
+  nic neseká. Do Electron balíčku se tato sada nepřibaluje.
+
+Při výměně záběru vytvořte i webovou verzi (ffmpeg):
+
+```bash
+ffmpeg -i assets/video/f1-1.mp4 -an -c:v libx264 -preset slow -crf 23 -maxrate 5M -bufsize 10M -pix_fmt yuv420p -movflags +faststart assets/video/web/f1-1.mp4
+```
+
 ## Sestavení Electron balíčků
 
 ```bash

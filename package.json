@@ -24,7 +24,8 @@
       "config.local.js",
       "package.json",
       "build/icon.png",
-      "assets/**/*"
+      "assets/**/*",
+      "!assets/video/web/**"
     ],
     "win": {
       "icon": "build/icon.ico",

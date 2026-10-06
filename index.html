@@ -536,7 +536,26 @@
   }
 
   // ---------- spořič: smyčka videí s texty ----------
-  const CLIPS=[1,2,3,4,5].map(n=>`assets/video/f1-${n}.mp4`);
+  // Dvě sady klipů: Electron (file:) čte původní 1080p ve vysoké kvalitě z disku. Web dostane menší sadu
+  // (assets/video/web, stejné rozlišení, zhruba čtvrtinový datový tok) a před spuštěním smyčky si ji celou
+  // stáhne do paměti – na slabé síti se pak video nikdy neseká, jen chvíli běží scény bez videa.
+  const IS_LOCAL = location.protocol==='file:';
+  let CLIPS=[1,2,3,4,5].map(n=>`${IS_LOCAL ? 'assets/video' : 'assets/video/web'}/f1-${n}.mp4`);
+  let clipsReady = IS_LOCAL;
+  async function preloadClips(){
+    try{
+      const blobs=await Promise.all(CLIPS.map(async u=>{
+        const r=await fetch(u);
+        if(!r.ok) throw new Error(`${r.status} ${u}`);
+        return r.blob();
+      }));
+      CLIPS=blobs.map(b=>URL.createObjectURL(b));
+    }catch(e){
+      console.warn('Přednačtení videí selhalo, klipy se budou streamovat:', e);
+    }
+    clipsReady=true;
+    if(current==='attract') playScene(sceneIdx);
+  }
   const SCENE_MS = 5000;
   const vids=[...document.querySelectorAll('#attractVideo video')];
   const scenes=[...document.querySelectorAll('#attract .scene')];
@@ -565,7 +584,7 @@
     const attempt = ++playbackAttempt;
     showScene(i);
     clearTimeout(sceneTimer);
-    if(screens.attract.classList.contains('novideo')){
+    if(screens.attract.classList.contains('novideo') || !clipsReady){
       sceneTimer=setTimeout(nextScene,SCENE_MS);
       return;
     }
@@ -1082,6 +1101,7 @@
   $('#boardLegend').innerHTML='<b>🏁 Pilot F1</b> = Valtteri Bottas (201 ms)<br><b style="color:var(--gold)">1., 2., 3.</b> = místa na žebříčku';
 
   applySettings();
+  if(!IS_LOCAL) preloadClips();
 
   // Spuštění úvodní obrazovky při načtení aplikace
   show('attract');
