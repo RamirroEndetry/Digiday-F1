@@ -68,7 +68,7 @@
   .lights .lamp.on{background:var(--red);box-shadow:0 0 18px 4px rgba(225,6,0,.75),inset 0 0 8px rgba(255,255,255,.35)}
 
   #attract{padding:0;justify-content:space-between;cursor:pointer}
-  .av{position:absolute;inset:0;z-index:0;background:#000}
+  .av{position:absolute;inset:0;z-index:0;background:#000;pointer-events:none}
   .av video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s}
   .av video.show{opacity:1}
   .av::after{content:"";position:absolute;inset:0;
@@ -255,6 +255,15 @@
   .adm-row .who span{opacity:.75;-webkit-user-select:text;user-select:text}
   .adm-row .field{margin-top:0;font-size:clamp(14px,1.5vw,18px);border-radius:10px}
   .adm-list .empty{opacity:.6;text-align:center;padding:1em}
+  .adm-set{margin-top:1em;padding:.8em 1em;border-radius:14px;background:rgba(255,255,255,.07);text-align:left;
+    display:flex;flex-wrap:wrap;align-items:center;gap:.6em 1em}
+  .adm-set .lbl{font-family:var(--font-display);font-weight:800;text-transform:uppercase;letter-spacing:.1em;font-size:clamp(14px,1.6vw,20px)}
+  .adm-set .hint{flex-basis:100%;font-size:clamp(12px,1.3vw,15px);opacity:.7}
+  .seg{display:inline-flex;border-radius:12px;overflow:hidden;border:2px solid rgba(255,255,255,.35)}
+  .seg button{padding:.45em 1em;font-family:var(--font-display);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:clamp(14px,1.6vw,19px);
+    background:rgba(255,255,255,.06);transition:background .15s}
+  .seg button+button{border-left:2px solid rgba(255,255,255,.35)}
+  .seg button.on{background:var(--magenta);color:#fff}
 
   @media (max-height:650px){
     .a-top{padding-top:2vh}.a-bottom{padding-bottom:3vh}
@@ -323,9 +332,9 @@
     <p class="lead" style="margin-top:2vh">Obrazovka se rozsvítí <b style="color:#ff6b66">červeně</b>.
       Jakmile se změní na <b style="color:#4dff9d">zelenou</b>, co nejrychleji klepni.</p>
     <div class="steps">
-      <div class="step"><div class="n">1</div><p><span class="swatch" style="background:var(--red)"></span>Červená = čekej. Předčasné klepnutí opakuje kolo – v každé jízdě máš jen 2 omyly. Třetím už se to počítá špatně.</p></div>
+      <div class="step"><div class="n">1</div><p><span class="swatch" style="background:var(--red)"></span>Červená = čekej. Předčasné klepnutí opakuje kolo – <span id="introEarly">v každé jízdě máš jen 2 omyly</span>. Třetím už se to počítá špatně.</p></div>
       <div class="step"><div class="n">2</div><p><span class="swatch" style="background:var(--green)"></span>Zelená = KLEPNI! Měříme reakci v milisekundách.</p></div>
-      <div class="step"><div class="n">3</div><p>Jedeš dvakrát: <b>trénink</b> a <b>naostro</b>, každá jízda má 3 kola. Počítá se <b>rychlejší</b> z obou.</p></div>
+      <div class="step"><div class="n">3</div><p id="introGames"></p></div>
     </div>
     <div class="prize-line" id="introPrizes"></div>
     <button class="btn" id="startBtn" disabled>Rozumím</button>
@@ -392,7 +401,6 @@
     <div class="consent">Vyplněním e-mailu souhlasíš s tím, že se ti DigiDay může ozvat.</div>
     <div class="err" id="signErr" hidden></div>
     <div class="actions">
-      <button class="btn secondary" id="signBack">Zpět</button>
       <button class="btn" id="signBtn">Uložit</button>
     </div>
   </div>
@@ -423,7 +431,15 @@
     </div>
   </div>
   <div class="modal-box wide" id="admPanel" hidden>
-    <h3>Hráči a kontakty</h3>
+    <h3>Správa</h3>
+    <div class="adm-set">
+      <span class="lbl">Průběh hry</span>
+      <div class="seg" id="admGames">
+        <button type="button" data-games="2">2 jízdy · trénink + naostro</button>
+        <button type="button" data-games="1">1 jízda · 3 kola</button>
+      </div>
+      <span class="hint" id="admGamesHint"></span>
+    </div>
     <p id="admInfo"></p>
     <div class="adm-list" id="admList"></div>
     <div class="modal-actions">
@@ -456,7 +472,10 @@
   const MIN_REACTION_MS = 100;
   const BTN_LOCK_MS = 700;
   const IDLE_MS = 60000;
+  const SIGNUP_AUTO_MS = 5000;   // po dohrání se zápis do žebříčku otevře sám; bez zápisu hra nekončí (jen nečinností)
   const BOARD_KEY = 'f1-reaction-board-v1';
+  const SETTINGS_KEY = 'f1-reaction-settings-v1';
+  const DEFAULT_GAMES = 2;   // 2 = trénink + naostro, 1 = jen jedna jízda po ROUNDS kolech (mění se ve Správě)
   const BOARD_SIZE = 50;
   const BOARD_CLOSE_MS = 30000;
 
@@ -464,9 +483,10 @@
   const $ = s => document.querySelector(s);
   const screens = ['attract','intro','test','results','signup'].reduce((o,id)=>(o[id]=document.getElementById(id),o),{});
   const bg = $('#bg'), boardBtn = $('#boardBtn');
-  let current = 'attract', modalOpen = false;
-  
+  let current = 'attract', modalOpen = false, signupTimer = null;
+
   function show(id){
+    clearTimeout(signupTimer);
     Object.values(screens).forEach(s=>s.classList.remove('active'));
     screens[id].classList.add('active');
     bg.style.display = (id==='test') ? 'none' : 'block';
@@ -480,6 +500,30 @@
   function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   const prizeFor = ms => PRIZES.find(p=>ms<=p.max);
   function lockBriefly(btn){ btn.disabled=true; setTimeout(()=>{ btn.disabled=false; },BTN_LOCK_MS); }
+
+  // ---------- nastavení (Správa): počet jízd ----------
+  let settings={games:DEFAULT_GAMES};
+  function loadSettings(){
+    try{
+      const s=JSON.parse(localStorage.getItem(SETTINGS_KEY));
+      if(s&&(s.games===1||s.games===2)) settings.games=s.games;
+    }catch(e){}
+    return settings;
+  }
+  function saveSettings(){ try{ localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings)); }catch(e){} }
+  // texty v návodu a ve Správě podle zvoleného průběhu hry
+  function applySettings(){
+    const two=settings.games===2;
+    $('#introGames').innerHTML = two
+      ? 'Jedeš dvakrát: <b>trénink</b> a <b>naostro</b>, každá jízda má 3 kola. Počítá se <b>rychlejší</b> z obou.'
+      : 'Jedeš <b>jednu jízdu</b> o 3 kolech. Počítá se <b>průměr</b> všech tří reakcí.';
+    $('#introEarly').textContent = two ? 'v každé jízdě máš jen 2 omyly' : 'máš jen 2 omyly';
+    document.querySelectorAll('#admGames button').forEach(b=>b.classList.toggle('on',Number(b.dataset.games)===settings.games));
+    $('#admGamesHint').textContent = two
+      ? 'Hráč jede trénink a pak naostro, počítá se rychlejší průměr. Změna platí pro další hráče.'
+      : 'Hráč jede jen jednu jízdu po 3 kolech, počítá se její průměr. Změna platí pro další hráče.';
+  }
+  loadSettings();
 
   // ---------- pozadí: světelné čáry ----------
   for(let i=0;i<9;i++){
@@ -637,7 +681,20 @@
     show('intro');
     lockBriefly(startBtn);
   }
-  screens.attract.addEventListener('pointerdown',goIntro);
+  // Start se chytá na úrovni dokumentu přes pointerdown (v zachytávací fázi, aby ho vidělo i při otevřeném
+  // panelu nebo Správě) a jako pojistka přes click – pro zařízení, kde se dotyk přes video/overlay nedoručí
+  // jako pointer událost. Click se bere jen tehdy, když mu žádný pointerdown nepředcházel (jinak je to jen
+  // dozvuk téhož dotyku, třeba zavření panelu klepnutím vedle). Tlačítka, panel žebříčku a Správa se vynechávají.
+  let lastPointerDownAt=-Infinity;
+  function attractTap(e){
+    if(e.type==='pointerdown') lastPointerDownAt=performance.now();
+    else if(performance.now()-lastPointerDownAt<1500) return;
+    if(current!=='attract'||modalOpen||boardOpen) return;
+    if(e.target&&e.target.closest&&e.target.closest('button,.drawer-wrap,.modal,.kb')) return;
+    goIntro();
+  }
+  document.addEventListener('pointerdown',attractTap,{capture:true});
+  document.addEventListener('click',attractTap);
   document.addEventListener('keydown',e=>{
     if(modalOpen||boardOpen) return;
     if(current==='attract'&&(e.key===' '||e.key==='Enter')) goIntro();
@@ -645,7 +702,7 @@
 
   // ---------- test: dvě jízdy (trénink + naostro), každá po ROUNDS kolech ----------
   const testEl=screens.test, testContent=$('#testContent'), testActions=$('#testActions'), roundLabel=$('#roundLabel');
-  let gameIdx=0, gameAvgs=[null,null];
+  let gameIdx=0, gameAvgs=[null,null], gameCount=DEFAULT_GAMES;   // gameCount se čte z nastavení při startu hráče
   let times=[], earlyCount=0, armed=false, waiting=false, goAt=0, waitTimer=null, rafId=null, lockTimer=null;
   const avgOf = arr => Math.round(arr.reduce((a,b)=>a+b,0)/arr.length);
 
@@ -663,12 +720,13 @@
   }
 
   function beginGame(i){ gameIdx=i; times=[]; earlyCount=0; startRound(); }
-  startBtn.addEventListener('click',()=>{ gameAvgs=[null,null]; beginGame(0); });
+  // při jedné jízdě se trénink (index 0) přeskočí a jede se rovnou „naostro“ (index 1), výsledek je pak v poli sharp
+  startBtn.addEventListener('click',()=>{ gameCount=loadSettings().games; gameAvgs=[null,null]; beginGame(gameCount===2?0:1); });
 
   function startRound(){
     show('test');
     testActions.innerHTML='';
-    roundLabel.textContent=`${GAMES[gameIdx]} · kolo ${times.length+1} / ${ROUNDS}`;
+    roundLabel.textContent = gameCount===2 ? `${GAMES[gameIdx]} · kolo ${times.length+1} / ${ROUNDS}` : `Kolo ${times.length+1} / ${ROUNDS}`;
     testEl.className='screen active wait';
     testContent.innerHTML=`<div class="big">Čekej…</div><div class="hint">Klepni, až se obrazovka rozsvítí zeleně</div>${dotsHTML()}`;
     waiting=true; armed=false;
@@ -762,7 +820,9 @@
     const fmt=v=>v==null?'nedokončeno':v+' ms';
     $('#resAvg').textContent=finalMs;
     $('#resPilot').textContent=PILOT_MS;
-    $('#resRounds').textContent=`Trénink ${fmt(gameAvgs[0])} · Naostro ${fmt(gameAvgs[1])} · počítá se rychlejší`;
+    $('#resRounds').textContent = gameCount===2
+      ? `Trénink ${fmt(gameAvgs[0])} · Naostro ${fmt(gameAvgs[1])} · počítá se rychlejší`
+      : `Kola: ${times.join(' · ')} ms · průměr`;
     $('#winTitle').textContent = finalMs<=PILOT_MS ? 'Rychlejší než pilot F1!' : 'Skvělá jízda!';
     const v=$('#verdict');
     if(finalMs<=PILOT_MS){ v.className='verdict win'; v.textContent=`🏆 Pilot F1 překonán o ${PILOT_MS-finalMs} ms!`; }
@@ -770,19 +830,23 @@
     $('#prizeIcon').textContent=prize.icon;
     $('#prizeName').textContent=prize.name;
     myEntryId=null;
-    $('#signed').hidden=true; toSignBtn.hidden=false; againBtn.textContent='Konec';
+    // dokud se hráč nezapíše, tlačítko Konec není – jediný únik je návrat na spořič po nečinnosti
+    $('#signed').hidden=true; toSignBtn.hidden=false; againBtn.hidden=true;
     ['#nameInput','#emailInput','#noteInput'].forEach(s=>{ $(s).value=''; });
     $('#signErr').hidden=true;
     const colors=['#ee0a8c','#ff4fb0','#ffffff','#ffcc33','#3b2d80'];
     confetti.innerHTML=Array.from({length:44},(_,i)=>
       `<i style="left:${Math.random()*100}%;background:${colors[i%colors.length]};animation-duration:${3+Math.random()*3}s;animation-delay:${-Math.random()*6}s;transform:rotate(${Math.random()*360}deg)"></i>`).join('');
     show('results');
-    lockBriefly(toSignBtn); lockBriefly(againBtn);
+    lockBriefly(toSignBtn);
+    // chvíli na radost z výsledku, pak se zápis otevře sám
+    signupTimer=setTimeout(()=>{ if(current==='results'&&myEntryId==null&&!modalOpen) goSignup(); },SIGNUP_AUTO_MS);
   }
-  toSignBtn.addEventListener('click',()=>{
+  function goSignup(){
     $('#signHead').textContent=`${finalMs} ms · ${prizeFor(finalMs).icon} ${prizeFor(finalMs).name}`;
     show('signup');
-  });
+  }
+  toSignBtn.addEventListener('click',goSignup);
   againBtn.addEventListener('click',goAttract);
 
   // ---------- žebříček: localStorage ----------
@@ -840,12 +904,11 @@
     const rank=board.sort((a,b)=>a.ms-b.ms).findIndex(e=>e.id===entry.id)+1;
     const s=$('#signed'); s.hidden=false;
     s.textContent=`✍️ Zapsáno! ${name} – ${finalMs} ms, ${rank}. místo.`;
-    toSignBtn.hidden=true; againBtn.textContent='Hotovo';
+    toSignBtn.hidden=true; againBtn.hidden=false; againBtn.textContent='Hotovo'; lockBriefly(againBtn);
     show('results');
     openBoard();
   }
   $('#signBtn').addEventListener('click',sign);
-  $('#signBack').addEventListener('click',()=>show('results'));
   [[nameInput,()=>emailInput.focus()],[emailInput,()=>noteInput.focus()],[noteInput,sign]].forEach(([el,next])=>{
     el.addEventListener('keydown',e=>{ e.stopPropagation(); if(e.key==='Enter') next(); });
     el.addEventListener('input',()=>{ signErr.hidden=true; });
@@ -985,6 +1048,10 @@
     closeAdmin();
     goAttract();
   });
+  $('#admGames').addEventListener('click',e=>{
+    const b=e.target.closest('button[data-games]'); if(!b) return;
+    settings.games=Number(b.dataset.games); saveSettings(); applySettings();
+  });
   $('#admBtn').addEventListener('click',e=>{ e.stopPropagation(); openAdmin(); });
   $('#admCancel').addEventListener('click',closeAdmin);
   $('#admClose').addEventListener('click',closeAdmin);
@@ -1014,7 +1081,9 @@
   $('#introPrizes').innerHTML='Hraješ o ceny: <b>'+esc(prizeText)+'</b>';
   $('#boardLegend').innerHTML='<b>🏁 Pilot F1</b> = Valtteri Bottas (201 ms)<br><b style="color:var(--gold)">1., 2., 3.</b> = místa na žebříčku';
 
-    // Spuštění úvodní obrazovky při načtení aplikace
+  applySettings();
+
+  // Spuštění úvodní obrazovky při načtení aplikace
   show('attract');
 })();
 </script>

@@ -7,11 +7,15 @@ Aplikace DigiDay pro měření reakční doby. Cílový čas: 201 ms
 
 1. **Spořič** – smyčka videí, klepnutím se spustí návod.
 2. **Dvě jízdy**: *trénink* a *naostro*, každá má 3 kola (`GAMES`, `ROUNDS`).
-   Počítá se rychlejší průměr z obou jízd.
+   Počítá se rychlejší průměr z obou jízd. Ve **Správě** lze přepnout na **jednu jízdu**
+   o 3 kolech (počítá se její průměr) – volba se pamatuje na daném zařízení a platí
+   pro další hráče.
 3. **Výherní stránka** – zobrazí se hned po třetím klepnutí jízdy naostro: výsledný čas,
    srovnání s pilotem a cena.
-4. **Zápis do žebříčku** – jméno, nepovinný e-mail a poznámka obsluhy (co je to za klienta).
-   Píše se na klávesnici přímo v aplikaci.
+4. **Zápis do žebříčku** – po 5 s se otevře sám (`SIGNUP_AUTO_MS`): jméno, nepovinný e-mail
+   a poznámka obsluhy (co je to za klienta). Píše se na klávesnici přímo v aplikaci.
+   Bez zápisu hru nejde ukončit – tlačítko *Hotovo* se objeví až po uložení; hráč, který
+   odejde, se „odhlásí“ sám návratem na spořič po 60 s nečinnosti.
 
 ## Ceny
 
@@ -27,8 +31,9 @@ Cena se určuje podle výsledného času, nastavuje se v `index.html` v konstant
 
 - **Žebříček** se vysouvá z boku tlačítkem 🏆 vlevo dole (na spořiči, v návodu i na výherní
   stránce). E-maily ani poznámky v něm vidět nejsou. Po 30 s bez dotyku se sám zavře.
-- **Správa** (⚙ vpravo nahoře nebo Ctrl+Shift+Delete, heslo správce): seznam hráčů s e-maily,
-  ke každému lze kdykoli dopsat poznámku, **Export CSV** (pro Excel) a **Smazat vše**.
+- **Správa** (⚙ vpravo nahoře nebo Ctrl+Shift+Delete, heslo správce): přepínač **Průběh hry**
+  (2 jízdy / 1 jízda), seznam hráčů s e-maily, ke každému lze kdykoli dopsat poznámku,
+  **Export CSV** (pro Excel) a **Smazat vše** (maže jen žebříček, nastavení zůstává).
 
 ## Pravidla proti podvádění
 
@@ -51,7 +56,7 @@ Cena se určuje podle výsledného času, nastavuje se v `index.html` v konstant
 | --- | --- |
 | Celá obrazovka (web) | tlačítko ⛶ vpravo dole nebo F11 |
 | Žebříček | tlačítko 🏆 vlevo dole |
-| Kontakty, poznámky, export, reset | nenápadné tlačítko ⚙ vpravo nahoře nebo Ctrl+Shift+Delete, zadat heslo správce |
+| Průběh hry, kontakty, poznámky, export, reset | nenápadné tlačítko ⚙ vpravo nahoře nebo Ctrl+Shift+Delete, zadat heslo správce |
 | Ukončení Electron aplikace | Ctrl+Q |
 | Přepnutí kiosk / okno (Electron) | F11 |
 
